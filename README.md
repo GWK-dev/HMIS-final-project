@@ -211,7 +211,7 @@ streamlit run app.py
 
 Access Points
 
-API Documentation: http://localhost:8000/docs
+API Documentation: http://127.0.0.1:8000
 
 Main Dashboard: http://localhost:8501
 
