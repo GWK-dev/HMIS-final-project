@@ -211,11 +211,13 @@ streamlit run app.py
 
 Access Points
 
-API Documentation: http://127.0.0.1:8000
+📊 Main Dashboard: http://localhost:8501
 
-Main Dashboard: http://localhost:8501
+🔗 API Documentation: http://127.0.0.1:8000/docs
 
-API Base URL: http://localhost:8000
+⚡ API Base URL: http://127.0.0.1:8000
+
+🧪 Test API: http://127.0.0.1:8000
 
 🔗 API Endpoints
 Endpoint	Method	Description
