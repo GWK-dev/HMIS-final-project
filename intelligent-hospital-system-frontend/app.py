@@ -1,8 +1,9 @@
-import streamlit as st
+﻿import streamlit as st
 import requests
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import os
 
 # Page config
 st.set_page_config(
@@ -11,11 +12,11 @@ st.set_page_config(
     layout="wide"
 )
 
-# API base URL
-API_BASE = "http://localhost:8000"
+# Use your live Render backend URL
+API_BASE = "https://hospital-backend-kyay.onrender.com"
 
 st.title("🏥 Intelligent Hospital Management System")
-st.subheader("Based on Kiambu Level 5 Hospital Research - Addressing Low Clinical Attendance")
+st.subheader("Based on Kiambu Level 5 Hospital Research - LIVE VERSION")
 
 # Sidebar
 st.sidebar.title("Navigation")
@@ -29,42 +30,45 @@ if page == "Dashboard":
         if response.status_code == 200:
             data = response.json()
             
-            # Key metrics
-            col1, col2, col3, col4 = st.columns(4)
-            
-            with col1:
-                st.metric("Total Patients", data.get('total_patients', 0))
-            with col2:
-                st.metric("High Risk Patients", data.get('high_risk_patients', 0))
-            with col3:
-                st.metric("High Risk %", f"{data.get('high_risk_percentage', 0):.1f}%")
-            with col4:
-                avg_sat = data.get('average_satisfaction_scores', {})
-                overall_avg = sum(avg_sat.values()) / len(avg_sat) if avg_sat else 0
-                st.metric("Avg Satisfaction", f"{overall_avg:.1f}%")
-            
-            # Satisfaction scores chart
-            st.subheader("Patient Satisfaction Scores")
-            if data.get('average_satisfaction_scores'):
-                sat_data = data['average_satisfaction_scores']
-                fig = px.bar(
-                    x=list(sat_data.keys()),
-                    y=list(sat_data.values()),
-                    title="Average Satisfaction Scores by Dimension",
-                    labels={'x': 'Satisfaction Dimension', 'y': 'Score (%)'}
-                )
-                st.plotly_chart(fig)
-            
-            # Research insights
-            st.subheader("Key Research Insights from Kiambu Study")
-            insights = data.get('research_based_insights', {})
-            for insight, value in insights.items():
-                st.info(f"**{insight.replace('_', ' ').title()}**: {value}")
+            if "message" in data and data["message"] == "No data available":
+                st.warning("No patient data available yet. Please add patients in the Patient Management section.")
+            else:
+                # Key metrics
+                col1, col2, col3, col4 = st.columns(4)
                 
+                with col1:
+                    st.metric("Total Patients", data.get('total_patients', 0))
+                with col2:
+                    st.metric("High Risk Patients", data.get('high_risk_patients', 0))
+                with col3:
+                    st.metric("High Risk %", f"{data.get('high_risk_percentage', 0):.1f}%")
+                with col4:
+                    avg_sat = data.get('average_satisfaction_scores', {})
+                    overall_avg = sum(avg_sat.values()) / len(avg_sat) if avg_sat else 0
+                    st.metric("Avg Satisfaction", f"{overall_avg:.1f}%")
+                
+                # Satisfaction scores chart
+                st.subheader("Patient Satisfaction Scores")
+                if data.get('average_satisfaction_scores'):
+                    sat_data = data['average_satisfaction_scores']
+                    fig = px.bar(
+                        x=list(sat_data.keys()),
+                        y=list(sat_data.values()),
+                        title="Average Satisfaction Scores by Dimension",
+                        labels={'x': 'Satisfaction Dimension', 'y': 'Score (%)'}
+                    )
+                    st.plotly_chart(fig)
+                
+                # Research insights
+                st.subheader("Key Research Insights from Kiambu Study")
+                insights = data.get('research_based_insights', {})
+                for insight, value in insights.items():
+                    st.info(f"**{insight.replace('_', ' ').title()}**: {value}")
         else:
             st.error("Could not fetch dashboard data")
-    except:
-        st.warning("Backend server not running. Start the backend with: uvicorn backend.app:app --reload")
+    except Exception as e:
+        st.error(f"Backend connection failed: {str(e)}")
+        st.info("Note: The backend might be waking up from sleep. Please wait 30 seconds and refresh.")
 
 elif page == "Patient Management":
     st.header("Patient Management")
@@ -112,10 +116,11 @@ elif page == "Patient Management":
                 if response.status_code == 200:
                     patient = response.json()
                     st.success(f"Patient added successfully! No-Show Probability: {patient['no_show_probability']:.1%}")
+                    st.info("Refresh the Dashboard to see updated analytics")
                 else:
-                    st.error("Failed to add patient")
-            except:
-                st.error("Backend server not running")
+                    st.error("Failed to add patient - backend may be waking up")
+            except Exception as e:
+                st.error(f"Backend connection failed: {str(e)}")
 
 elif page == "Predictions":
     st.header("No-Show Prediction System")
@@ -197,9 +202,9 @@ elif page == "Predictions":
                     st.plotly_chart(fig)
                     
                 else:
-                    st.error("Prediction failed")
-            except:
-                st.error("Backend server not running")
+                    st.error("Prediction failed - backend may be waking up")
+            except Exception as e:
+                st.error(f"Backend connection failed: {str(e)}")
 
 elif page == "Research Insights":
     st.header("Research Insights from Kiambu Level 5 Hospital Study")
@@ -246,3 +251,4 @@ elif page == "Research Insights":
 # Footer
 st.markdown("---")
 st.markdown("**AI for Software Engineering Final Project** • Based on Kiambu Level 5 Hospital Clinical Attendance Research")
+st.markdown(f"**Live Backend**: {API_BASE}")
