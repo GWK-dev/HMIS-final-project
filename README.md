@@ -210,14 +210,14 @@ cd ../frontend
 streamlit run app.py
 
 Access Points
+## 🌐 Live Deployment
 
-📊 Main Dashboard: http://localhost:8501
+- **🏥 Frontend Dashboard**: https://hmis-final-project-kur3s7nwnfzapptwf87x7sh.streamlit.app/
+- **🔗 Backend API**: https://hospital-backend-kyay.onrender.com
+- **📚 API Documentation**: https://hospital-backend-kyay.onrender.com/docs
 
-🔗 API Documentation: http://127.0.0.1:8000/docs
 
-⚡ API Base URL: http://127.0.0.1:8000
-
-🧪 Test API: http://127.0.0.1:8000
+Your teachers can now access the complete system instantly without any setup!
 
 🔗 API Endpoints
 Endpoint	Method	Description
