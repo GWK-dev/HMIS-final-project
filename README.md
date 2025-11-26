@@ -216,6 +216,12 @@ Access Points
 - **🔗 Backend API**: https://hospital-backend-kyay.onrender.com
 - **📚 API Documentation**: https://hospital-backend-kyay.onrender.com/docs
 
+- ## ⏰ Free Tier Notice
+This app runs on free hosting. If you see errors:
+1. First visit: https://hospital-backend-kyay.onrender.com/docs
+2. Wait 30 seconds for backend to wake up
+3. Then use the main dashboard
+
 
 Your teachers can now access the complete system instantly without any setup!
 
